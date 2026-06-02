@@ -90,13 +90,22 @@ sudo systemctl restart cloudflared      # 或你啟動 tunnel 的方式
 | 功能 | 狀態 | 說明 |
 |---|---|---|
 | AI 影像工具（去背 / 元件擷取 / 升解析 / 轉 PDF） | **真**（瀏覽器端） | 在使用者瀏覽器以 WebGPU 跑 ISNet / SlimSAM / UpscalerJS / pdf-lib。需桌面 Chrome/Edge，首次載入下載模型，執行時連 esm.sh CDN。 |
-| AI 設計工作室（生成品牌包） | **真**（部署後） | 經 `/api/design` → VPS proxy → 上游 LLM。金鑰未設或斷線時自動退回範例。 |
+| AI 設計工作室 — 名片/文案品牌包 | **真**（部署後） | 經 `/api/design` → VPS proxy → 文字模型(gpt-4o-mini)。回品牌名/配色/字體/文案 JSON 套模板。金鑰未設或斷線時自動退回範例。 |
+| AI 設計工作室 — 海報主視覺（文生圖） | **真**（部署後） | 海報尺寸下按「AI 生成海報主視覺」→ `/api/poster` → 文生圖模型(gpt-image-2, images/generations)。回 PNG 鋪成海報背景、標題文字疊在上面。約 10–30 秒。 |
 | 印前預檢（出血/安全線、一鍵修正） | **demo** | 介面為模擬動畫，尚無真實檔案分析。商轉需補後端服務。 |
 | 報價（15 秒、最省/CP值/最快、130+ 印刷廠） | **demo** | 方案寫死、模擬計時。商轉需接報價引擎與印刷廠資料。 |
 | 訂單 / Brand Kit | **demo** | 靜態畫面，無真實下單、無金流。 |
 
 > 商轉時的擴充方向：報價、預檢、訂單各自做成獨立服務，新增 `/api/quote`、`/api/preflight`、`/api/order`，
 > 用同樣的 Tunnel ingress 路由即可，proxy 維持單一職責不要塞功能。
+
+## 成本提醒（文字 vs 文生圖差很多）
+
+- **文字品牌包**（`/api/design`）：token 極少，每次約幾分之一美分，月成本通常個位數美元。
+- **海報文生圖**（`/api/poster`）：`gpt-image-2` 每張約**幾美分**，比文字貴一到兩個數量級。控制花費的兩個旋鈕都在 `.env`：
+  - `YFP_IMAGE_QUALITY`：`low` < `medium` < `high`，越高越貴。預設 `medium`。
+  - `YFP_IMAGE_RATE_MAX`：每 IP 每分鐘上限，預設 5，避免被連點刷爆。
+- 完全不想花文生圖的錢：設 `YFP_IMAGE_ENABLED=0`，海報就回到純色模板（不影響名片/文案）。
 
 ## 注意：執行時依賴外部 CDN
 

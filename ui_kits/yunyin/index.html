@@ -45,7 +45,8 @@
 <!-- real AI helpers (progressive enhancement; plain script so native import() works) -->
 <script>/* AI 設計創作真生成：同源相對路徑，由 Cloudflare Tunnel 將 /api/* 路由到 VPS proxy 容器。
    金鑰只在 VPS 環境變數，前端不含任何金鑰。 */
-   window.YFP_AI_ENDPOINT = "/api/design";</script>
+   window.YFP_AI_ENDPOINT = "/api/design";
+   window.YFP_POSTER_ENDPOINT = "/api/poster";  /* 海報文生圖 */</script>
 <script src="live-ai.jsx"></script>
 
 <!-- app (order matters: ui first, app last) -->
@@ -66,4 +67,9 @@
   if (root.children.length) hide();
   else {
     const obs = new MutationObserver(() => { if (root.children.length) { hide(); obs.disconnect(); } });
-    obs.observe(root, { childList: true })
+    obs.observe(root, { childList: true });
+  }
+  setTimeout(hide, 2000);
+</script>
+</body>
+</html>

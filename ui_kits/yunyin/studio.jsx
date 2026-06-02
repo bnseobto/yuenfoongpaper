@@ -21,7 +21,7 @@ const PROMPTS = [
 ];
 
 /* a rendered "AI-generated" design surface */
-function DesignSurface({ v, size, brand }) {
+function DesignSurface({ v, size, brand, bgImage }) {
   const t = makeT_S(useApp_S().lang);
   const common = { background: v.bg, color: v.ink, width: '100%', height: '100%', position: 'relative', overflow: 'hidden' };
   if (size.id === 'sticker' || size.id === 'ig') {
@@ -38,14 +38,22 @@ function DesignSurface({ v, size, brand }) {
     );
   }
   if (size.id === 'poster') {
+    // 文生圖主視覺：有圖時鋪滿背景 + 暗色漸層讓文字可讀；無圖時用原本的純色排版
+    const onImg = !!bgImage;
+    const ink = onImg ? '#fff' : v.ink;
+    const sub = onImg ? 'rgba(255,255,255,.82)' : v.sub;
     return (
-      <div style={{ ...common, padding: '13% 11%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-        <div className="row between center"><span style={{ font: 'var(--caption)', color: v.sub, letterSpacing: '.2em' }}>NEW MENU</span><Icon name="Coffee" size={22} color={v.accent} /></div>
-        <div className="col" style={{ gap: 6 }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(28px,7vw,52px)', lineHeight: 1 }}>{brand}</span>
-          <span style={{ fontSize: 'clamp(13px,2.6vw,18px)', color: v.sub }}>{t({ zh: '春季限定・手沖系列', en: 'Spring Pour-over Series' })}</span>
+      <div style={{ ...common, padding: '13% 11%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', color: ink }}>
+        {onImg && <>
+          <img src={bgImage} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.05) 38%, rgba(0,0,0,.55) 100%)' }} />
+        </>}
+        <div className="row between center" style={{ position: 'relative' }}><span style={{ font: 'var(--caption)', color: sub, letterSpacing: '.2em' }}>NEW MENU</span><Icon name="Coffee" size={22} color={onImg ? '#fff' : v.accent} /></div>
+        <div className="col" style={{ gap: 6, position: 'relative' }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(28px,7vw,52px)', lineHeight: 1, textShadow: onImg ? '0 2px 16px rgba(0,0,0,.45)' : 'none' }}>{brand}</span>
+          <span style={{ fontSize: 'clamp(13px,2.6vw,18px)', color: sub }}>{t({ zh: '春季限定・手沖系列', en: 'Spring Pour-over Series' })}</span>
         </div>
-        <div className="row between center"><span style={{ height: 3, width: 54, background: v.accent }} /><span style={{ font: 'var(--caption)', color: v.sub }}>@{brand.toLowerCase().replace(/\s/g, '')}</span></div>
+        <div className="row between center" style={{ position: 'relative' }}><span style={{ height: 3, width: 54, background: onImg ? '#fff' : v.accent }} /><span style={{ font: 'var(--caption)', color: sub }}>@{brand.toLowerCase().replace(/\s/g, '')}</span></div>
       </div>
     );
   }
@@ -76,6 +84,9 @@ function Studio() {
   const [kit, setKit] = useState(null);
   const [genLoading, setGenLoading] = useState(false);
   const [genErr, setGenErr] = useState(null);
+  const [posterImg, setPosterImg] = useState(null);
+  const [posterLoading, setPosterLoading] = useState(false);
+  const [posterErr, setPosterErr] = useState(null);
   const { running, progress, run } = useFakeRun_S(2100);
 
   // kit (real) → dynamic variant; else preset
@@ -100,6 +111,23 @@ function Studio() {
       catch (e) { setGenErr(t({ zh: '生成服務未連線，改用範例。', en: 'Generation offline — showing sample.' })); run(() => setGenerated(true)); }
       setGenLoading(false);
     } else { run(() => setGenerated(true)); }
+  };
+
+  // 海報文生圖：用品牌包與風格組合提示詞，請後端 /api/poster 生成主視覺背景
+  const doGeneratePoster = async () => {
+    if (!live || !live.posterEndpoint()) { setPosterErr(t({ zh: '文生圖服務未連線。', en: 'Image service offline.' })); return; }
+    setPosterErr(null); setPosterLoading(true);
+    try {
+      const vibe = (kit && kit.vibe) || '';
+      const pal = (v.palette || []).join('、');
+      const base = prompt.trim() || t(PROMPTS[0]);
+      const imgPrompt = `為品牌「${brand}」設計一張直式 A3 海報的主視覺背景圖。主題：${base}。風格關鍵字：${vibe}。配色參考：${pal}。溫暖、有質感、適合印刷的攝影或插畫風；構圖留出上、中、下空間放標題與文字；畫面中不要出現任何文字、字母或標誌。`;
+      const dataUrl = await live.generatePoster(imgPrompt, {});
+      setPosterImg(dataUrl);
+    } catch (e) {
+      setPosterErr(t({ zh: '海報生成失敗，請稍後再試。', en: 'Poster generation failed, try again.' }));
+    }
+    setPosterLoading(false);
   };
   const previewW = sz.ratio >= 1 ? 460 : 460 * sz.ratio;
   const previewH = previewW / sz.ratio;
@@ -190,13 +218,25 @@ function Studio() {
               <Tabs value={size} onChange={setSize} tabs={STUDIO_SIZES.map(s => ({ id: s.id, label: t(s.label) }))} />
               <div className="row center" style={{ gap: 8 }}>
                 <span className="tag tag--teal num">{sz.dim}</span>
+                {size === 'poster' && (
+                  <button className="btn btn--accent btn--sm" onClick={doGeneratePoster} disabled={posterLoading}>
+                    {posterLoading ? <Icon name="LoaderCircle" size={15} className="spin" /> : <Icon name="Wand2" size={15} />}
+                    {posterImg ? t({ zh: '重新生成主視覺', en: 'Regenerate visual' }) : t({ zh: 'AI 生成海報主視覺', en: 'AI poster visual' })}
+                  </button>
+                )}
                 <button className="btn btn--outline btn--sm" onClick={() => app.go('imagelab')}><Icon name="Image" size={15} />{t({ zh: '影像工具', en: 'Image tools' })}</button>
                 <button className="btn btn--primary btn--sm" onClick={() => app.go('preflight')}><Icon name="ScanSearch" size={15} />{t({ zh: '送印前預檢', en: 'Preflight' })}</button>
               </div>
             </div>
+            {size === 'poster' && (posterErr || posterLoading) && (
+              <div className="row center" style={{ gap: 8, font: 'var(--caption)', color: posterErr ? 'var(--orange-600)' : 'var(--teal-600)' }}>
+                <Icon name={posterErr ? 'TriangleAlert' : 'LoaderCircle'} size={14} className={posterErr ? '' : 'spin'} />
+                {posterErr || t({ zh: '文生圖生成中…（約 10–30 秒）', en: 'Generating image… (10–30s)' })}
+              </div>
+            )}
             <div className="card" style={{ display: 'grid', placeItems: 'center', padding: 40, background: 'var(--paper-100)', minHeight: 420 }}>
               <div className="pop" key={variant + size} style={{ width: previewW, height: previewH, maxWidth: '100%', borderRadius: size === 'sticker' ? '50%' : 14, boxShadow: 'var(--sh-xl)', overflow: 'hidden' }}>
-                <DesignSurface v={v} size={sz} brand={brand} />
+                <DesignSurface v={v} size={sz} brand={brand} bgImage={size === 'poster' ? posterImg : null} />
               </div>
             </div>
             {/* style variants + brand kit */}

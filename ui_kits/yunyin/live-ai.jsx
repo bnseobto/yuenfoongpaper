@@ -119,6 +119,19 @@
       const j = await r.json();
       return j.kit;
     },
+
+    /* ---- 海報文生圖：呼叫 VPS 代理拿主視覺圖（回 data URL）---- */
+    posterEndpoint() { return (typeof window !== 'undefined' && window.YFP_POSTER_ENDPOINT) || null; },
+    async generatePoster(prompt, { size, quality } = {}) {
+      const url = this.posterEndpoint();
+      if (!url) throw new Error('NO_POSTER_ENDPOINT');
+      const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt, size, quality }) });
+      if (!r.ok) throw new Error('POSTER_' + r.status);
+      const j = await r.json();
+      if (j.b64) return `data:image/png;base64,${j.b64}`;
+      if (j.url) return j.url;
+      throw new Error('POSTER_EMPTY');
+    },
   };
 
   function loadImg(src) { return new Promise((res, rej) => { const i = new Image(); i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
