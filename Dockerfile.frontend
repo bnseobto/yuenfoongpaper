@@ -1,0 +1,12 @@
+# 永豐 AI 雲印 — 前端靜態站（nginx）
+# build context = repo 根目錄
+FROM nginx:1.27-alpine
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# 只複製 app 真正需要的檔案（保留相對路徑結構）
+COPY colors_and_type.css /usr/share/nginx/html/colors_and_type.css
+COPY assets/             /usr/share/nginx/html/assets/
+COPY ui_kits/            /usr/share/nginx/html/ui_kits/
+
+EXPOSE 80

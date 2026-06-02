@@ -1,0 +1,16 @@
+# 機密
+.env
+
+# 相依與雜項
+node_modules/
+*.log
+.DS_Store
+
+# 冗餘大檔：打包複本／單檔匯出／散落素材，不入版控
+*.zip
+*.paint
+/Yuen Foong AI Web-to-Print.html
+/cloudw2p.png
+/terrance yang.jpeg
+/人像相片.png
+/永豐紙業官網.png

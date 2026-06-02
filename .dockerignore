@@ -1,0 +1,15 @@
+# 縮小 build context（這些檔案不會進映像檔，也不需要上傳給 docker build）
+.git
+.env
+node_modules
+
+# 大型素材／來源檔（app 不需要）
+*.zip
+*.paint
+uploads/
+preview/
+Yuen Foong AI Web-to-Print.html
+cloudw2p.png
+terrance yang.jpeg
+人像相片.png
+永豐紙業官網.png

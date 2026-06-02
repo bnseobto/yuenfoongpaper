@@ -1,0 +1,27 @@
+# 永豐 AI 雲印 — VPS 容器佈署
+# 兩個服務：靜態前端 + AI 設計生成代理。
+# 對外曝光交給既有的 Cloudflare Tunnel，故 port 只綁 127.0.0.1（不開放公網）。
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    image: yunprint-frontend
+    container_name: yunprint-frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:80"
+
+  proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.proxy
+    image: yunprint-proxy
+    container_name: yunprint-proxy
+    restart: unless-stopped
+    env_file: .env            # YFP_UPSTREAM_URL / YFP_UPSTREAM_KEY / YFP_MODEL（機密）
+    environment:
+      - PORT=8787
+      - YFP_ALLOW_ORIGIN=https://yunprint.taozhuai.com
+    ports:
+      - "127.0.0.1:8787:8787"

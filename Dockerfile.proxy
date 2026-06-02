@@ -1,0 +1,10 @@
+# 永豐 AI 雲印 — AI 設計生成代理（Node，零相依）
+# build context = repo 根目錄
+FROM node:20-alpine
+
+WORKDIR /app
+COPY backend/yfp-ai-proxy.mjs ./yfp-ai-proxy.mjs
+
+# 金鑰等機密由 compose 的 env_file / environment 注入，不寫進映像檔
+EXPOSE 8787
+CMD ["node", "yfp-ai-proxy.mjs"]

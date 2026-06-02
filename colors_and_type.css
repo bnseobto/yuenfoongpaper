@@ -1,0 +1,191 @@
+/* ============================================================================
+   永豐 AI 雲印 — Colors & Type
+   Yuen Foong AI Web-to-Print · Design System foundations
+   ----------------------------------------------------------------------------
+   Brand DNA: 永豐紙業's cloud-printing CI (warm paper, dusty teal "cloud/mountain"
+   mark, energetic orange swoosh, coffee-brown print ink) fused with a clean,
+   precise AI-tech surface treatment. Warm paper-craft meets calm machine.
+
+   Source colors sampled from the live properties:
+     · cloudw2p.com  teal banner #4992AF · orange swoosh #F18E1B
+                     coffee button #A67555 · cream hero #F0E0D3
+     · yfp.com.tw    corporate red #CF1226 (security/alert accent)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+
+:root {
+  /* ---------- Brand scale · Ink Teal (雲 / 雲印 primary) ---------------- */
+  --teal-50:  #EAF3F6;
+  --teal-100: #CFE5EC;
+  --teal-200: #A6D0DC;
+  --teal-300: #74B4C7;
+  --teal-400: #4A95B0;   /* logo teal */
+  --teal-500: #2E7D95;   /* PRIMARY */
+  --teal-600: #226478;   /* deep / pressed */
+  --teal-700: #194D5D;   /* ink headers */
+  --teal-800: #123A47;
+  --teal-900: #0C2A33;   /* tech ink (dark surfaces) */
+
+  /* ---------- Accent scale · AI Orange (能量 / AI) --------------------- */
+  --orange-200: #FCD8A4;
+  --orange-300: #F9B45E;
+  --orange-400: #F59E2E;
+  --orange-500: #F18E1B;  /* logo swoosh · ACCENT */
+  --orange-600: #D9740A;
+  --orange-700: #B85C05;
+
+  /* ---------- Warm secondary · Coffee Ink (紙材 / 印) ------------------ */
+  --coffee-300: #DDBE9E;
+  --coffee-400: #C99B79;
+  --coffee-500: #A67555;  /* print-material brown */
+  --coffee-600: #8A5E40;
+
+  /* ---------- Paper neutrals (warm-tinted) ---------------------------- */
+  --paper-0:   #FFFFFF;
+  --paper-50:  #FBF7F2;   /* app background (warm white) */
+  --paper-100: #F7EEE4;   /* cream surface */
+  --paper-200: #F0E0D3;   /* deep cream / hero wash */
+
+  --n-50:  #F6F1EB;
+  --n-100: #EFE8DF;
+  --n-200: #E4DBCF;   /* dividers */
+  --n-300: #D2C7B8;   /* borders */
+  --n-400: #A89E90;   /* placeholder */
+  --n-muted: #7C7368; /* muted text */
+  --n-700: #4C453E;   /* body text */
+  --n-900: #221E1B;   /* headings (warm near-black) */
+
+  /* ---------- Semantic colors ----------------------------------------- */
+  --danger-50:  #FCEBEC;
+  --danger-100: #F8D2D6;
+  --danger-500: #CF1226;  /* corporate red · preflight error / security */
+  --danger-600: #A60D1E;
+
+  --warning-50:  #FEF4E2;
+  --warning-500: #E0A416;
+  --warning-600: #B9830A;
+
+  --success-50:  #E7F6EF;
+  --success-500: #1E9E6A;  /* print-ready / passed */
+  --success-600: #15784F;
+
+  --info-50:  var(--teal-50);
+  --info-500: var(--teal-500);
+
+  /* ---------- Semantic surface / text aliases (LIGHT, default) -------- */
+  --color-bg:        var(--paper-50);
+  --color-surface:   var(--paper-0);
+  --color-surface-2: var(--paper-100);
+  --color-fg:        var(--n-900);
+  --color-fg-2:      var(--n-700);
+  --color-fg-muted:  var(--n-muted);
+  --color-border:    var(--n-300);
+  --color-divider:   var(--n-200);
+  --color-primary:   var(--teal-500);
+  --color-primary-fg:#FFFFFF;
+  --color-accent:    var(--orange-500);
+  --color-ring:      color-mix(in srgb, var(--teal-500) 45%, transparent);
+
+  /* ---------- Typography families ------------------------------------- */
+  --font-display: "Space Grotesk", "Noto Sans TC", "PingFang TC",
+                  "Microsoft JhengHei", sans-serif;
+  --font-sans:    "Plus Jakarta Sans", "Noto Sans TC", "PingFang TC",
+                  "Microsoft JhengHei", system-ui, sans-serif;
+  --font-cjk:     "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-mono:    "Space Grotesk", ui-monospace, "SFMono-Regular", monospace;
+
+  /* ---------- Type scale (semantic) ----------------------------------- */
+  --display-xl: 700 4rem/1.04 var(--font-display);     /* 64 hero numerals */
+  --display:    700 3rem/1.08 var(--font-display);     /* 48 */
+  --h1:         700 2.25rem/1.15 var(--font-sans);     /* 36 */
+  --h2:         700 1.75rem/1.2 var(--font-sans);      /* 28 */
+  --h3:         600 1.375rem/1.3 var(--font-sans);     /* 22 */
+  --h4:         600 1.125rem/1.4 var(--font-sans);     /* 18 */
+  --body-lg:    400 1.125rem/1.65 var(--font-sans);    /* 18 */
+  --body:       400 1rem/1.65 var(--font-sans);        /* 16 */
+  --body-sm:    400 0.875rem/1.6 var(--font-sans);     /* 14 */
+  --caption:    500 0.8125rem/1.5 var(--font-sans);    /* 13 */
+  --overline:   600 0.75rem/1.4 var(--font-sans);      /* 12 · uppercase 0.08em */
+
+  /* ---------- Spacing (4px base) -------------------------------------- */
+  --sp-1: 0.25rem;  --sp-2: 0.5rem;   --sp-3: 0.75rem;  --sp-4: 1rem;
+  --sp-5: 1.25rem;  --sp-6: 1.5rem;   --sp-8: 2rem;     --sp-10: 2.5rem;
+  --sp-12: 3rem;    --sp-16: 4rem;    --sp-20: 5rem;    --sp-24: 6rem;
+
+  /* ---------- Radii ---------------------------------------------------- */
+  --r-sm: 6px;  --r-md: 10px;  --r-lg: 14px;  --r-xl: 20px;
+  --r-2xl: 28px; --r-pill: 999px;
+
+  /* ---------- Shadows (warm-tinted, soft) ----------------------------- */
+  --sh-sm: 0 1px 2px rgba(34,28,24,.06), 0 1px 1px rgba(34,28,24,.04);
+  --sh-md: 0 4px 16px -4px rgba(34,28,24,.10), 0 2px 6px -2px rgba(34,28,24,.06);
+  --sh-lg: 0 12px 32px -8px rgba(34,28,24,.14), 0 4px 12px -4px rgba(34,28,24,.08);
+  --sh-xl: 0 28px 64px -18px rgba(18,58,71,.24), 0 8px 24px -8px rgba(34,28,24,.10);
+  --sh-ring: 0 0 0 4px var(--color-ring);
+
+  /* ---------- Motion --------------------------------------------------- */
+  --ease-out: cubic-bezier(.22,.61,.36,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+  --t-fast: 120ms;  --t-base: 200ms;  --t-slow: 360ms;
+}
+
+/* ---------- Dark / tech surface (opt-in: add .theme-ink to a root) ----- */
+.theme-ink {
+  /* remap paper + neutral tokens so hardcoded var() refs flip too */
+  --paper-0: #11333D; --paper-50: #0C2A33; --paper-100: #0E323C; --paper-200: #123A47;
+  --n-50: #163E49; --n-100: #1A4651; --n-200: #1E4B58; --n-300: #275A68;
+  --n-400: #6E909B; --n-muted: #9DBDC0; --n-700: #C5DBE0; --n-900: #EAF3F6;
+
+  --color-bg:        var(--teal-900);
+  --color-surface:   #113843;          /* raised tech panel */
+  --color-surface-2: #0E323C;
+  --color-fg:        #EAF3F6;
+  --color-fg-2:      #B7D0D8;
+  --color-fg-muted:  #7FA0AB;
+  --color-border:    #1E4B58;
+  --color-divider:   #173E49;
+  --color-primary:   var(--teal-300);
+  --color-primary-fg:#06222B;
+  --color-accent:    var(--orange-400);
+  --color-ring:      color-mix(in srgb, var(--teal-300) 50%, transparent);
+}
+
+/* ---------- Brand-primary presets (tweakable) ------------------------- */
+.brand-indigo {
+  --teal-50:#ECF0FA; --teal-100:#D3DCF3; --teal-200:#AEC0E9; --teal-300:#7E98D8;
+  --teal-400:#5472C2; --teal-500:#3A55A8; --teal-600:#2D4488; --teal-700:#22356B;
+  --teal-800:#1A2A54; --teal-900:#121E3D;
+}
+.brand-pine {
+  --teal-50:#E8F4EE; --teal-100:#CDE7D9; --teal-200:#A2D2B8; --teal-300:#6FB78F;
+  --teal-400:#3F9A6C; --teal-500:#1F7A52; --teal-600:#176343; --teal-700:#114E35;
+  --teal-800:#0D3D2A; --teal-900:#092C1E;
+}
+/* ---------- Accent presets (tweakable) -------------------------------- */
+.accent-coral {
+  --orange-200:#F8CDBF; --orange-300:#F2A48D; --orange-400:#EC7458;
+  --orange-500:#E8553D; --orange-600:#C73D28; --orange-700:#A12F1E;
+}
+.accent-amber {
+  --orange-200:#F6E0A8; --orange-300:#EFC766; --orange-400:#E7B02F;
+  --orange-500:#E0A416; --orange-600:#BC8609; --orange-700:#976B05;
+}
+
+/* ============================================================================
+   Base element styling — semantic, so plain HTML inherits the system.
+   ========================================================================== */
+.ds-type h1, .ds-type h2, .ds-type h3, .ds-type h4 {
+  color: var(--color-fg); margin: 0; text-wrap: balance;
+}
+.ds-type h1 { font: var(--h1); letter-spacing: -0.01em; }
+.ds-type h2 { font: var(--h2); letter-spacing: -0.01em; }
+.ds-type h3 { font: var(--h3); }
+.ds-type h4 { font: var(--h4); }
+.ds-type p  { font: var(--body); color: var(--color-fg-2); margin: 0; text-wrap: pretty; }
+
+.t-display-xl { font: var(--display-xl); letter-spacing: -0.02em; color: var(--color-fg); }
+.t-display    { font: var(--display); letter-spacing: -0.02em; color: var(--color-fg); }
+.t-overline   { font: var(--overline); letter-spacing: 0.1em; text-transform: uppercase;
+                color: var(--color-accent); }
+.t-num        { font-family: var(--font-display); font-feature-settings: "tnum" 1; }
