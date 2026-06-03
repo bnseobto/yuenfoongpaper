@@ -133,7 +133,8 @@ function Studio() {
       const vibe = (kit && kit.vibe) || '';
       const pal = (v.palette || []).join('、');
       const base = prompt.trim() || t(PROMPTS[0]);
-      const imgPrompt = `為品牌「${brand}」設計一張直式 A3 海報的主視覺背景圖。主題：${base}。風格關鍵字：${vibe}。配色參考：${pal}。溫暖、有質感、適合印刷的攝影或插畫風；構圖留出上、中、下空間放標題與文字；畫面中不要出現任何文字、字母或標誌。`;
+      const headline = (kit && kit.copy && kit.copy.poster) || (kit && kit.tagline) || base;
+      const imgPrompt = `設計一張直式 A3 海報的主視覺背景圖。海報主題：${headline}。內容說明：${base}。視覺風格：${vibe || '現代、專業'}（請讓畫面緊扣主題調性，而非預設風景或生活照）。配色參考：${pal}。專業、適合印刷；構圖在上、中、下留白給標題與文字；畫面中不要出現任何文字、字母、數字或標誌。`;
       const dataUrl = await live.generatePoster(imgPrompt, {});
       setPosterImg(dataUrl);
     } catch (e) {
