@@ -20,19 +20,31 @@ const PROMPTS = [
   { zh: '幫寵物用品店做一套品牌識別', en: 'Brand identity for a pet supplies shop' },
 ];
 
-/* a rendered "AI-generated" design surface */
-function DesignSurface({ v, size, brand, bgImage }) {
+/* a rendered "AI-generated" design surface — 文案跟著 AI 品牌包(kit)跑 */
+function DesignSurface({ v, size, brand, bgImage, kit }) {
   const t = makeT_S(useApp_S().lang);
   const common = { background: v.bg, color: v.ink, width: '100%', height: '100%', position: 'relative', overflow: 'hidden' };
+
+  // 由 kit 推導文案；沒有 kit（範本/範例）時退回原本咖啡店字樣
+  const vibeArr = kit && kit.vibe ? String(kit.vibe).split(/[,，、]/).map(s => s.trim()).filter(Boolean) : null;
+  const cardSub    = (vibeArr && vibeArr.join(' · ')) || 'COFFEE & DESSERT';
+  const stickerSub = (vibeArr && vibeArr.slice(0, 2).join(' · ')) || 'COFFEE · DESSERT';
+  const posterEyebrow = (vibeArr && vibeArr[0]) || 'NEW MENU';
+  const posterSub  = (kit && kit.copy && kit.copy.poster) || (kit && kit.tagline) || t({ zh: '春季限定・手沖系列', en: 'Spring Pour-over Series' });
+  const handle = (brand || '').toLowerCase().replace(/[^a-z0-9]/g, '') || 'brand';
+  const initial = ((brand || 'B').trim()[0] || 'B').toUpperCase();
+  // 品牌標記改用品牌首字（不再寫死咖啡杯，避免紅酒/寵物等品牌出現咖啡杯）
+  const Mark = ({ d = 40, bw = 1.5, fs = 18, color = v.accent }) => (
+    <span style={{ width: d, height: d, borderRadius: '50%', border: `${bw}px solid ${color}`, display: 'grid', placeItems: 'center', color, fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: fs }}>{initial}</span>
+  );
+
   if (size.id === 'sticker' || size.id === 'ig') {
     return (
       <div style={{ ...common, display: 'grid', placeItems: 'center', borderRadius: size.id === 'sticker' ? '50%' : 14 }}>
         <div className="col center" style={{ gap: 10 }}>
-          <span style={{ width: 58, height: 58, borderRadius: '50%', border: `2px solid ${v.accent}`, display: 'grid', placeItems: 'center', color: v.accent }}>
-            <Icon name="Coffee" size={30} color={v.accent} />
-          </span>
+          <Mark d={58} bw={2} fs={26} />
           <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 26, letterSpacing: '.04em' }}>{brand}</span>
-          <span style={{ font: 'var(--caption)', color: v.sub, letterSpacing: '.22em' }}>COFFEE · DESSERT</span>
+          <span style={{ font: 'var(--caption)', color: v.sub, letterSpacing: '.22em' }}>{stickerSub}</span>
         </div>
       </div>
     );
@@ -48,12 +60,12 @@ function DesignSurface({ v, size, brand, bgImage }) {
           <img src={bgImage} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.05) 38%, rgba(0,0,0,.55) 100%)' }} />
         </>}
-        <div className="row between center" style={{ position: 'relative' }}><span style={{ font: 'var(--caption)', color: sub, letterSpacing: '.2em' }}>NEW MENU</span><Icon name="Coffee" size={22} color={onImg ? '#fff' : v.accent} /></div>
+        <div className="row between center" style={{ position: 'relative' }}><span style={{ font: 'var(--caption)', color: sub, letterSpacing: '.2em' }}>{posterEyebrow}</span><Mark d={30} bw={2} fs={14} color={onImg ? '#fff' : v.accent} /></div>
         <div className="col" style={{ gap: 6, position: 'relative' }}>
           <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(28px,7vw,52px)', lineHeight: 1, textShadow: onImg ? '0 2px 16px rgba(0,0,0,.45)' : 'none' }}>{brand}</span>
-          <span style={{ fontSize: 'clamp(13px,2.6vw,18px)', color: sub }}>{t({ zh: '春季限定・手沖系列', en: 'Spring Pour-over Series' })}</span>
+          <span style={{ fontSize: 'clamp(13px,2.6vw,18px)', color: sub }}>{posterSub}</span>
         </div>
-        <div className="row between center" style={{ position: 'relative' }}><span style={{ height: 3, width: 54, background: onImg ? '#fff' : v.accent }} /><span style={{ font: 'var(--caption)', color: sub }}>@{brand.toLowerCase().replace(/\s/g, '')}</span></div>
+        <div className="row between center" style={{ position: 'relative' }}><span style={{ height: 3, width: 54, background: onImg ? '#fff' : v.accent }} /><span style={{ font: 'var(--caption)', color: sub }}>@{handle}</span></div>
       </div>
     );
   }
@@ -61,14 +73,14 @@ function DesignSurface({ v, size, brand, bgImage }) {
   return (
     <div style={{ ...common, padding: '11% 12%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
       <div className="row center" style={{ gap: 10 }}>
-        <span style={{ width: 40, height: 40, borderRadius: '50%', border: `1.5px solid ${v.accent}`, display: 'grid', placeItems: 'center' }}><Icon name="Coffee" size={20} color={v.accent} /></span>
+        <Mark d={40} bw={1.5} fs={18} />
         <div className="col"><span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 19, letterSpacing: '.06em' }}>{brand}</span>
-          <span style={{ font: '600 9px/1 var(--font-sans)', color: v.sub, letterSpacing: '.28em' }}>COFFEE & DESSERT</span></div>
+          <span style={{ font: '600 9px/1 var(--font-sans)', color: v.sub, letterSpacing: '.28em' }}>{cardSub}</span></div>
       </div>
       <div className="col" style={{ gap: 3, fontSize: 10.5, color: v.sub }}>
         <span className="row center" style={{ gap: 6 }}><Icon name="Phone" size={11} color={v.accent} />02-1234-5678</span>
-        <span className="row center" style={{ gap: 6 }}><Icon name="Instagram" size={11} color={v.accent} />@{brand.toLowerCase().replace(/\s/g, '')}</span>
-        <span className="row center" style={{ gap: 6 }}><Icon name="Globe" size={11} color={v.accent} />www.{brand.toLowerCase().replace(/\s/g, '')}.com</span>
+        <span className="row center" style={{ gap: 6 }}><Icon name="Instagram" size={11} color={v.accent} />@{handle}</span>
+        <span className="row center" style={{ gap: 6 }}><Icon name="Globe" size={11} color={v.accent} />www.{handle}.com</span>
       </div>
     </div>
   );
@@ -236,7 +248,7 @@ function Studio() {
             )}
             <div className="card" style={{ display: 'grid', placeItems: 'center', padding: 40, background: 'var(--paper-100)', minHeight: 420 }}>
               <div className="pop" key={variant + size} style={{ width: previewW, height: previewH, maxWidth: '100%', borderRadius: size === 'sticker' ? '50%' : 14, boxShadow: 'var(--sh-xl)', overflow: 'hidden' }}>
-                <DesignSurface v={v} size={sz} brand={brand} bgImage={size === 'poster' ? posterImg : null} />
+                <DesignSurface v={v} size={sz} brand={brand} bgImage={size === 'poster' ? posterImg : null} kit={kit} />
               </div>
             </div>
             {/* style variants + brand kit */}
