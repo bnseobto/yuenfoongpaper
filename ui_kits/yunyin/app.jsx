@@ -1,5 +1,5 @@
 /* app.jsx — shell: top nav, router, footer, context provider, tweaks */
-const { AppCtx: AppCtx_R, makeT: makeT_R, Landing, Studio, ImageLab, Preflight, Quote, Order } = window;
+const { AppCtx: AppCtx_R, makeT: makeT_R, Landing, Studio, ImageLab, Preflight, Quote, Order, Smart, Market } = window;
 const { useTweaks, TweaksPanel, TweakSection, TweakToggle, TweakRadio, TweakColor, TweakSlider } = window;
 const { useState, useEffect, useRef, useCallback } = React;
 
@@ -15,13 +15,15 @@ const BRAND_CLASS = { '#2E7D95': '', '#3A55A8': 'brand-indigo', '#1F7A52': 'bran
 const ACCENT_CLASS = { '#F18E1B': '', '#E8553D': 'accent-coral', '#E0A416': 'accent-amber' };
 
 const SCREENS = {
-  home: Landing, studio: Studio, imagelab: ImageLab,
-  preflight: Preflight, quote: Quote, order: Order,
+  home: Landing, studio: Studio, market: Market, imagelab: ImageLab,
+  smart: Smart, preflight: Preflight, quote: Quote, order: Order,
 };
 const NAV = [
   { id: 'home', icon: 'House', label: { zh: '首頁', en: 'Home' } },
   { id: 'studio', icon: 'Sparkles', label: { zh: 'AI 設計工作室', en: 'AI Studio' } },
+  { id: 'market', icon: 'Store', label: { zh: '設計市集', en: 'Market' } },
   { id: 'imagelab', icon: 'Wand2', label: { zh: 'AI 影像工具', en: 'Image Tools' } },
+  { id: 'smart', icon: 'QrCode', label: { zh: '智慧包裝', en: 'Smart Pack' } },
   { id: 'preflight', icon: 'ScanSearch', label: { zh: '印前預檢', en: 'Preflight' } },
   { id: 'quote', icon: 'Timer', label: { zh: '報價', en: 'Quote' } },
   { id: 'order', icon: 'PackageCheck', label: { zh: '訂單 / Brand Kit', en: 'Orders' } },

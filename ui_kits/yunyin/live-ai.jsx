@@ -10,6 +10,7 @@
     upscaler: 'https://esm.sh/upscaler@1.0.0-beta.19?bundle',
     esrgan: 'https://esm.sh/@upscalerjs/esrgan-slim@1.0.0-beta.19?bundle',
     pdflib: 'https://esm.sh/pdf-lib@1.17.1',
+    qrcode: 'https://esm.sh/qrcode@1.5.4',
   };
   const memo = {};
   const once = (k, fn) => (memo[k] ||= fn());
@@ -131,6 +132,13 @@
       if (j.b64) return `data:image/png;base64,${j.b64}`;
       if (j.url) return j.url;
       throw new Error('POSTER_EMPTY');
+    },
+
+    /* ---- 產生真實 QR Code（回 data URL，瀏覽器端，免後端）---- */
+    async qr(text, opts = {}) {
+      const m = await once('qrcode', () => import(CDN.qrcode));
+      const QR = m.default || m;
+      return await QR.toDataURL(String(text), { margin: 1, width: 320, errorCorrectionLevel: 'M', color: { dark: '#163A40', light: '#FFFFFF' }, ...opts });
     },
   };
 
