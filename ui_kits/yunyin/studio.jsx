@@ -119,7 +119,9 @@ function Studio() {
     setGenErr(null);
     if (live && live.endpoint()) {
       setGenLoading(true);
-      try { const k = await live.generateBrandKit(p, app.lang); setKit(k); setVariant('ai'); setGenerated(true); }
+      try { const k = await live.generateBrandKit(p, app.lang); setKit(k); setVariant('ai'); setGenerated(true);
+        // 連動：把生成的品牌存到共享處，供「智慧包裝」等頁面帶入
+        window.__yfpBrand = { brand: (k && (k.brandName || k.brandNameZh)) || 'CAFE DAY', brandZh: k && k.brandNameZh, tagline: k && k.tagline, vibe: k && k.vibe, palette: (k && Array.isArray(k.palette)) ? k.palette.map(x => hex(x)) : [], product: p }; }
       catch (e) { setGenErr(t({ zh: '生成服務未連線，改用範例。', en: 'Generation offline — showing sample.' })); run(() => setGenerated(true)); }
       setGenLoading(false);
     } else { run(() => setGenerated(true)); }

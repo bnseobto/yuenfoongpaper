@@ -44,6 +44,12 @@ function Bullet({ icon, color, children }) {
 
 function Smart() {
   const app = useApp_SM(); const t = makeT_SM(app.lang);
+  // 連動：帶入 AI 設計工作室剛生成的品牌；沒有則退回示意範例 CAFE DAY
+  const b = (typeof window !== 'undefined' && window.__yfpBrand) || null;
+  const brand = (b && b.brand) || 'CAFE DAY';
+  const subtitle = (b && (b.brandZh || b.tagline)) || t({ zh: '手沖咖啡禮盒', en: 'Pour-over gift box' });
+  const vibe = b && b.vibe;
+  const accent = (b && b.palette && b.palette[1]) || 'var(--teal-500)';
   const TABS = [
     { id: 'qr', label: t({ zh: '連網 QR 標籤', en: 'Smart QR' }) },
     { id: 'verify', label: t({ zh: '掃碼驗真 + DPP', en: 'Verify + DPP' }) },
@@ -81,8 +87,9 @@ function Smart() {
             {/* 產品標籤 mock */}
             <div style={{ width: '100%', maxWidth: 360, borderRadius: 14, padding: 20, background: 'var(--paper-100)', border: '1px solid var(--n-200)', display: 'flex', gap: 16, alignItems: 'center' }}>
               <div className="col" style={{ flex: 1, gap: 6 }}>
-                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 20 }}>CAFE DAY</span>
-                <span className="muted" style={{ font: 'var(--caption)' }}>{t({ zh: '手沖咖啡禮盒', en: 'Pour-over gift box' })}</span>
+                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 20, color: accent }}>{brand}</span>
+                <span className="muted" style={{ font: 'var(--caption)' }}>{subtitle}</span>
+                {vibe && <span className="muted" style={{ font: 'var(--caption)' }}>{t({ zh: '風格：', en: 'Style: ' })}{vibe}</span>}
                 <span className="row center" style={{ gap: 6, marginTop: 6, font: 'var(--caption)', color: 'var(--teal-600)' }}>
                   <Icon name="ShieldCheck" size={14} />{t({ zh: '永豐雲端驗證', en: 'YFP Verify' })}
                 </span>
@@ -126,7 +133,7 @@ function Smart() {
                   </span>
                 </div>
                 <div style={{ borderTop: '1px solid var(--color-divider)', paddingTop: 10 }} className="col">
-                  <span style={{ fontWeight: 700 }}>CAFE DAY · {t({ zh: '手沖咖啡禮盒', en: 'Pour-over box' })}</span>
+                  <span style={{ fontWeight: 700 }}>{brand} · {subtitle}</span>
                   <span className="num muted" style={{ font: 'var(--caption)' }}>{serial}</span>
                 </div>
                 <div className="col" style={{ gap: 6 }}>
@@ -177,7 +184,7 @@ function Smart() {
               {NAMES.map((nm, i) => (
                 <div key={i} className="card pop" style={{ padding: 14, display: 'flex', gap: 12, alignItems: 'center' }}>
                   <div className="col" style={{ flex: 1, gap: 4 }}>
-                    <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15 }}>CAFE DAY</span>
+                    <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: accent }}>{brand}</span>
                     <span style={{ font: 'var(--body-sm)' }}>{t({ zh: '致 ', en: 'To ' })}{nm}</span>
                     <span className="num muted" style={{ font: 'var(--caption)' }}>YFP-{1001 + i}</span>
                   </div>
@@ -204,7 +211,7 @@ function Smart() {
               <div style={{ position: 'relative', height: 420, background: 'linear-gradient(160deg,#2E7D95,#163A40)', overflow: 'hidden' }}>
                 {/* 產品 */}
                 <div style={{ position: 'absolute', left: '50%', top: '54%', transform: 'translate(-50%,-50%)', width: 150, height: 200, borderRadius: 14, background: 'var(--paper-100)', boxShadow: '0 18px 40px rgba(0,0,0,.4)', display: 'grid', placeItems: 'center' }}>
-                  <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: '#5B4334' }}>CAFE DAY</span>
+                  <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: '#5B4334' }}>{brand}</span>
                 </div>
                 {/* AR 浮層（示意）*/}
                 <div className="pop" style={{ position: 'absolute', left: '14%', top: '16%', background: 'rgba(255,255,255,.92)', borderRadius: 12, padding: '8px 12px', boxShadow: 'var(--sh-lg)', font: 'var(--caption)', display: 'flex', gap: 6, alignItems: 'center' }}>
