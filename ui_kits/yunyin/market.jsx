@@ -39,14 +39,14 @@ function Market() {
       {/* hero / model */}
       <div className="card" style={{ padding: 24, background: 'linear-gradient(135deg, var(--teal-50), var(--paper-50))', border: '1px solid var(--teal-100, var(--n-200))' }}>
         <div className="row between center wraprow" style={{ gap: 18 }}>
-          <div className="col" style={{ gap: 8, maxWidth: 560 }}>
+          <div className="col" style={{ gap: 8, maxWidth: 760 }}>
             <span className="row center" style={{ gap: 8 }}>
               <AIBadge label={t({ zh: '新功能', en: 'New' })} />
               <h2 style={{ font: 'var(--h2)', margin: 0 }}>{t({ zh: '設計市集', en: 'Design Market' })}</h2>
             </span>
             <p className="muted" style={{ margin: 0 }}>
-              {t({ zh: '設計師上架版型，商家一鍵客製下印，平台與設計師拆帳——把創作者經濟帶進印刷。靈感來自拓竹 MakerWorld。',
-                en: 'Designers publish templates, shops customize & print in one tap, platform shares revenue — a creator economy for print.' })}
+              {t({ zh: '設計師上架版型，商家一鍵客製下印，平台與設計師拆帳——把創作者經濟帶進印刷。',
+                en: 'Designers publish templates, shops customize & print in one tap, platform shares revenue.' })}
             </p>
             <div className="row center" style={{ gap: 28, marginTop: 6 }}>
               <MkStat n="1,240+" label={t({ zh: '設計師', en: 'Creators' })} />
